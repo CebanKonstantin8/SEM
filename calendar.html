@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar - SEM Society</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Reuse styles from index.html */
+        :root {
+            --primary: #2c5282;
+            --secondary: #718096;
+            --bg: #f5f3ee;
+            --text: #1f2937;
+            --card-bg: rgba(142, 160, 191, 0.7);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .logo-text {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 5px;
+        }
+        
+        nav a.active:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--primary);
+        }
+        
+        .hamburger {
+            display: none;
+            cursor: pointer;
+        }
+        
+        /* Calendar Page Specific Styles */
+        .calendar-section {
+            padding: 80px 0 40px;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .page-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .page-header p {
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .calendar-embed {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 60px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            text-align: center;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .calendar-embed p {
+            font-size: 1.2rem;
+            color: var(--secondary);
+        }
+        
+        .events-section {
+            margin-top: 40px;
+        }
+        
+        .events-list {
+            margin-top: 30px;
+        }
+        
+        .event-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .event-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        
+        .event-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .event-date {
+            background-color: var(--primary);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-right: 15px;
+            min-width: 120px;
+            text-align: center;
+        }
+        
+        .event-title {
+            font-size: 1.3rem;
+            color: var(--primary);
+        }
+        
+        .event-details {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        
+        .event-detail {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+            color: var(--secondary);
+        }
+        
+        .event-detail i {
+            margin-right: 5px;
+        }
+        
+        .event-actions {
+            margin-top: 15px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #1a365d;
+            transform: translateY(-2px);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: white;
+            padding: 40px 0;
+            margin-top: 60px;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .social-icon {
+            width: 30px;
+            height: 30px;
+            background-color: var(--secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                right: 20px;
+                background: white;
+                padding: 15px;
+                border-radius: 8px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+                width: 200px;
+            }
+            
+            nav ul.show {
+                display: flex;
+            }
+            
+            .hamburger {
+                display: block;
+            }
+.event-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .event-date {
+                margin-bottom: 10px;
+                margin-right: 0;
+            }
+            
+            .event-details {
+                flex-direction: column;
+            }
+            
+            .event-detail {
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <div class="logo-circle">SEM</div>
+                <div class="logo-text">SEM SOCIETY</div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="academic-bank.html">Academic Bank</a></li>
+                    <li><a href="calendar.html" class="active">Calendar</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="hamburger">☰</div>
+        </div>
+    </header>
+
+    <main>
+        <section class="calendar-section">
+            <div class="container">
+                <div class="page-header">
+                    <h1>Calendar</h1>
+                    <p>Upcoming events, meetings, and study sessions</p>
+                </div>
+                
+                <div class="calendar-embed">
+                    <p>Google Calendar Embed Placeholder</p>
+                </div>
+                
+                <div class="events-section">
+                    <h2 class="section-title">Upcoming Events</h2>
+                    
+                    <div class="events-list" id="events-container">
+                        <!-- Events will be inserted here by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="copyright">© <span id="current-year"></span> SEM Society, CBS</div>
+            <div class="social-icons">
+                <a href="#" class="social-icon" aria-label="LinkedIn">Li</a>
+                <a href="#" class="social-icon" aria-label="Instagram">Ig</a>
+                <a href="#" class="social-icon" aria-label="Email">@</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Set current year in footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+        // Mobile navigation toggle
+        document.querySelector('.hamburger').addEventListener('click', function() {
+            document.querySelector('nav ul').classList.toggle('show');
+        });
+// Highlight active nav link
+        const currentPage = location.pathname.split('/').pop() || 'index.html';
+        document.querySelectorAll('nav a').forEach(link => {
+            if (link.getAttribute('href') === currentPage) {
+                link.classList.add('active');
+            }
+        });
+        
+        // Calendar events data
+        const events = [
+            {
+                id: 1,
+                title: "General Meeting",
+                date: "2023-10-15",
+                time: "17:00",
+                location: "CBS, Room 4.12",
+                description: "Monthly general meeting for all members. Agenda includes upcoming events and committee updates."
+            },
+            {
+                id: 2,
+                title: "Service Management Workshop",
+                date: "2023-10-22",
+                time: "13:00",
+                location: "CBS, Room 2.05",
+                description: "Interactive workshop on service design thinking with industry guest speakers."
+            },
+            {
+                id: 3,
+                title: "Alumni Networking Event",
+                date: "2023-11-05",
+                time: "18:30",
+                location: "CBS Atrium",
+                description: "Meet SEM alumni and learn about career paths in service management."
+            },
+            {
+                id: 4,
+                title: "Exam Prep Session",
+                date: "2023-11-12",
+                time: "10:00",
+                location: "CBS Library, Group Room 3",
+                description: "Study group session for upcoming exams. Bring your questions!"
+            },
+            {
+                id: 5,
+                title: "Industry Panel",
+                date: "2023-11-20",
+                time: "16:00",
+                location: "CBS, Auditorium A",
+                description: "Panel discussion with service management professionals from various industries."
+            }
+        ];
+        
+        // Display upcoming events
+        function displayUpcomingEvents() {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            const upcomingEvents = events.filter(event => {
+                const eventDate = new Date(event.date);
+                return eventDate >= today;
+            });
+            
+            // Sort by date
+            upcomingEvents.sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            const eventsContainer = document.getElementById('events-container');
+            eventsContainer.innerHTML = '';
+            
+            if (upcomingEvents.length === 0) {
+                eventsContainer.innerHTML = '<p>No upcoming events scheduled. Check back later!</p>';
+                return;
+            }
+            
+            upcomingEvents.forEach(event => {
+                const eventDate = new Date(event.date);
+                const formattedDate = eventDate.toLocaleDateString('en-US', { 
+                    month: 'short', 
+                    day: 'numeric',
+                    year: 'numeric'
+                });
+                
+                const eventCard = document.createElement('div');
+                eventCard.className = 'event-card';
+                eventCard.innerHTML = `
+                    <div class="event-header">
+                        <div class="event-date">${formattedDate}</div>
+                        <h3 class="event-title">${event.title}</h3>
+                    </div>
+                    <div class="event-details">
+                        <div class="event-detail">
+                            <i>🕒</i> ${event.time}
+                        </div>
+                        <div class="event-detail">
+                            <i>📍</i> ${event.location}
+                        </div>
+                    </div>
+                    <p>${event.description}</p>
+                    <div class="event-actions">
+                        <a href="#" class="btn btn-primary" data-event-id="${event.id}">Add to Calendar</a>
+                    </div>
+                `;
+                
+                eventsContainer.appendChild(eventCard);
+            });
+            
+            // Add event listeners to "Add to Calendar" buttons
+            document.querySelectorAll('[data-event-id]').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const eventId = this.getAttribute('data-event-id');
+                    const event = events.find(e => e.id == eventId);
+                    alert(`Added "${event.title}" to your calendar!`);
+                });
+            });
+        }
+        
+        // Initialize
+        displayUpcomingEvents();
+    </script>
+</body>
+</html>

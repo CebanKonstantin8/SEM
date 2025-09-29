@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Bank - SEM Society</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Reuse styles from index.html */
+        :root {
+            --primary: #2c5282;
+            --secondary: #718096;
+            --bg: #f5f3ee;
+            --text: #1f2937;
+            --card-bg: rgba(142, 160, 191, 0.7);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .logo-text {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 5px;
+        }
+        
+        nav a.active:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--primary);
+        }
+        
+        .hamburger {
+            display: none;
+            cursor: pointer;
+        }
+        
+        /* Academic Bank Specific Styles */
+        .academic-bank {
+            padding: 80px 0 40px;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .page-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .page-header p {
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .semester-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .semester-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .semester-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .semester-card h2 {
+            font-size: 1.8rem;
+            color: white;
+            margin-bottom: 10px;
+        }
+        
+        .semester-card p {
+            color: white;
+        }
+        
+        /* Semester View Styles */
+        .semester-view {
+            display: none;
+        }
+        
+        .breadcrumb {
+            margin-bottom: 20px;
+        }
+        
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .filter-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        .filter-group select, .filter-group input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+        }
+        
+        .exam-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .exam-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .exam-card h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .exam-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            color: var(--secondary);
+        }
+        
+        .exam-card p {
+            margin-bottom: 15px;
+        }
+        
+        .exam-actions {
+            margin-top: 15px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #1a365d;
+            transform: translateY(-2px);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: white;
+            padding: 40px 0;
+            margin-top: 60px;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .social-icon {
+            width: 30px;
+            height: 30px;
+            background-color: var(--secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                right: 20px;
+                background: white;
+                padding: 15px;
+                border-radius: 8px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+                width: 200px;
+            }
+            
+            nav ul.show {
+                display: flex;
+            }
+            
+            .hamburger {
+                display: block;
+            }
+.semester-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+            
+            .filters {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <div class="logo-circle">SEM</div>
+                <div class="logo-text">SEM SOCIETY</div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="academic-bank.html" class="active">Academic Bank</a></li>
+                    <li><a href="calendar.html">Calendar</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="hamburger">☰</div>
+        </div>
+    </header>
+
+    <main>
+        <section class="academic-bank">
+            <div class="container">
+                <div class="page-header">
+                    <h1>Academic Bank</h1>
+                    <p>Browse past exams and materials by semester</p>
+                </div>
+                
+                <div id="semester-grid-view">
+                    <div class="semester-grid">
+                        <div class="semester-card" data-semester="1">
+                            <h2>1st Semester</h2>
+                            <p>Introductory courses</p>
+                        </div>
+                        <div class="semester-card" data-semester="2">
+                            <h2>2nd Semester</h2>
+                            <p>Core service management</p>
+                        </div>
+                        <div class="semester-card" data-semester="3">
+                            <h2>3rd Semester</h2>
+                            <p>Specialization begins</p>
+                        </div>
+                        <div class="semester-card" data-semester="4">
+                            <h2>4th Semester</h2>
+                            <p>Advanced topics</p>
+                        </div>
+                        <div class="semester-card" data-semester="5">
+                            <h2>5th Semester</h2>
+                            <p>Electives and projects</p>
+                        </div>
+                        <div class="semester-card" data-semester="6">
+                            <h2>6th Semester</h2>
+                            <p>Thesis preparation</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="semester-detail-view" class="semester-view">
+                    <div class="breadcrumb">
+                        <a href="#" id="back-to-all">← All Semesters</a>
+                    </div>
+                    <h2 id="semester-title">1st Semester</h2>
+                    
+                    <div class="filters">
+                        <div class="filter-group">
+                            <label for="search">Search</label>
+                            <input type="text" id="search" placeholder="Search exams...">
+                        </div>
+                        <div class="filter-group">
+                            <label for="course">Course</label>
+                            <select id="course">
+                                <option value="">All Courses</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="year">Year</label>
+                            <select id="year">
+                                <option value="">All Years</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="exam-grid" id="exam-results">
+                        <!-- Exam cards will be inserted here by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="copyright">© <span id="current-year"></span> SEM Society, CBS</div>
+            <div class="social-icons">
+                <a href="#" class="social-icon" aria-label="LinkedIn">Li</a>
+                <a href="#" class="social-icon" aria-label="Instagram">Ig</a>
+                <a href="#" class="social-icon" aria-label="Email">@</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Set current year in footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+        // Mobile navigation toggle
+        document.querySelector('.hamburger').addEventListener('click', function() {
+            document.querySelector('nav ul').classList.toggle('show');
+        });
+// Highlight active nav link
+        const currentPage = location.pathname.split('/').pop() || 'index.html';
+        document.querySelectorAll('nav a').forEach(link => {
+            if (link.getAttribute('href') === currentPage) {
+                link.classList.add('active');
+            }
+        });
+        
+        // Academic Bank functionality
+        const examData = {
+            "1": [
+                {
+                    "course": "Introduction to Service Management",
+                    "year": "2022",
+                    "term": "Spring",
+                    "description": "Final exam covering basic concepts of service management.",
+                    "file": "exam1.pdf"
+                },
+                {
+                    "course": "Business Economics",
+                    "year": "2022",
+                    "term": "Spring",
+                    "description": "Midterm exam with problems on microeconomics.",
+                    "file": "exam2.pdf"
+                },
+                {
+                    "course": "Organizational Behavior",
+                    "year": "2021",
+                    "term": "Fall",
+                    "description": "Case study analysis and theoretical questions.",
+                    "file": "exam3.pdf"
+                }
+            ],
+            "2": [
+                {
+                    "course": "Service Operations",
+                    "year": "2022",
+                    "term": "Fall",
+                    "description": "Final exam with case studies and calculations.",
+                    "file": "exam4.pdf"
+                },
+                {
+                    "course": "Marketing Management",
+                    "year": "2022",
+                    "term": "Fall",
+                    "description": "Marketing strategies and consumer behavior questions.",
+                    "file": "exam5.pdf"
+                }
+            ],
+            "3": [
+                {
+                    "course": "Service Innovation",
+                    "year": "2023",
+                    "term": "Spring",
+                    "description": "Innovation frameworks and case analysis.",
+                    "file": "exam6.pdf"
+                }
+            ],
+            "4": [
+                {
+                    "course": "Advanced Service Design",
+                    "year": "2023",
+                    "term": "Spring",
+                    "description": "Design thinking and service blueprinting exam.",
+                    "file": "exam7.pdf"
+                }
+            ],
+            "5": [
+                {
+                    "course": "Strategic Management",
+                    "year": "2023",
+                    "term": "Fall",
+                    "description": "Case-based strategic analysis exam.",
+                    "file": "exam8.pdf"
+                }
+            ],
+            "6": [
+                {
+                    "course": "Thesis Preparation",
+                    "year": "2023",
+                    "term": "Fall",
+                    "description": "Research methodology and proposal guidelines.",
+                    "file": "exam9.pdf"
+                }
+            ]
+        };
+        
+        // Semester selection
+        document.querySelectorAll('.semester-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const semester = this.getAttribute('data-semester');
+                showSemesterDetails(semester);
+            });
+        });
+        
+        // Back to all semesters
+        document.getElementById('back-to-all').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('semester-grid-view').style.display = 'block';
+            document.getElementById('semester-detail-view').style.display = 'none';
+        });
+        
+        // Filter functionality
+        document.getElementById('search').addEventListener('input', filterExams);
+        document.getElementById('course').addEventListener('change', filterExams);
+        document.getElementById('year').addEventListener('change', filterExams);
+        
+        function showSemesterDetails(semester) {
+            document.getElementById('semester-grid-view').style.display = 'none';
+            document.getElementById('semester-detail-view').style.display = 'block';
+            
+            // Set semester title
+            document.getElementById('semester-title').textContent = 
+                semester === '1' ? '1st Semester' :
+                semester === '2' ? '2nd Semester' :
+                semester === '3' ? '3rd Semester' :
+                `${semester}th Semester`;
+            
+            // Populate filters
+            const courses = [...new Set(examData[semester].map(exam => exam.course))];
+            const years = [...new Set(examData[semester].map(exam => exam.year))];
+            
+            const courseSelect = document.getElementById('course');
+            const yearSelect = document.getElementById('year');
+            
+            // Clear existing options (keep first "All" option)
+            while (courseSelect.options.length > 1) courseSelect.remove(1);
+            while (yearSelect.options.length > 1) yearSelect.remove(1);
+            
+            // Add new options
+            courses.forEach(course => {
+                const option = document.createElement('option');
+                option.value = course;
+                option.textContent = course;
+                courseSelect.appendChild(option);
+            });
+            
+            years.forEach(year => {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                yearSelect.appendChild(option);
+            });
+            
+            // Display all exams initially
+            displayExams(examData[semester]);
+        }
+        
+        function displayExams(exams) {
+            const examGrid = document.getElementById('exam-results');
+            examGrid.innerHTML = '';
+            
+            exams.forEach(exam => {
+                const examCard = document.createElement('div');
+                examCard.className = 'exam-card';
+                examCard.innerHTML = `
+                    <h3>${exam.course}</h3>
+                    <div class="exam-meta">
+                        <span>${exam.year} ${exam.term}</span>
+                    </div>
+                    <p>${exam.description}</p>
+                    <div class="exam-actions">
+                        <a href="assets/exams/${exam.file}" class="btn btn-primary" target="_blank">View/Download PDF</a>
+                    </div>
+                `;
+                examGrid.appendChild(examCard);
+            });
+        }
+        
+        function filterExams() {
+            const semester = document.getElementById('semester-title').textContent.split(' ')[0];
+            const semesterNum = semester === '1st' ? '1' :
+                              semester === '2nd' ? '2' :
+                              semester === '3rd' ? '3' : semester.replace('th', '');
+            
+            const searchTerm = document.getElementById('search').value.toLowerCase();
+            const courseFilter = document.getElementById('course').value;
+            const yearFilter = document.getElementById('year').value;
+            
+            const filteredExams = examData[semesterNum].filter(exam => {
+                const matchesSearch = exam.course.toLowerCase().includes(searchTerm) || 
+                                     exam.description.toLowerCase().includes(searchTerm);
+                const matchesCourse = courseFilter ? exam.course === courseFilter : true;
+                const matchesYear = yearFilter ? exam.year === yearFilter : true;
+                
+                return matchesSearch && matchesCourse && matchesYear;
+            });
+            
+            displayExams(filteredExams);
+        }
+    </script>
+</body>
+</html>
